@@ -58,13 +58,13 @@
                             }
     
                             if(nodays==1){
-                                if(i==patients.length-1){               
+                                if(<%=i %>==<%=patients.size%>-1){               
                                     phoneNumbers1 += cleanedPhoneNumber;
                                 }else{
                                     phoneNumbers1 += cleanedPhoneNumber+",";  
                                 }
                             }else{
-                                if(i==patients.length-1){               
+                                if(<%=i %>==<%=patients.size%>-1){               
                                     phoneNumbers2 += cleanedPhoneNumber;
                                 }else{
                                     phoneNumbers2 += cleanedPhoneNumber+",";  
