@@ -35,7 +35,7 @@ public class PatientDao {
                         + " JOIN person_attribute ON person_attribute.person_id=patient.patient_id AND person_attribute.person_attribute_type_id=8 "
                         + " JOIN obs ON obs.person_id=patient.patient_id AND obs.concept_id=5096 AND (DATEDIFF(obs.value_datetime, CURDATE()) = 1 OR DATEDIFF(obs.value_datetime, CURDATE()) = 2)"
                         + " where patient.voided=0 LIMIT 100";
-                int i = 1;
+                // int i = 1;
                 stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 rs = stmt.executeQuery();
                 while (rs.next()) {

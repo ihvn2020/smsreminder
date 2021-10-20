@@ -1,6 +1,7 @@
 
 <div style="text-align: center;"><button class="btn btn-success" id="sendSMS" style="text-align: center;">Send SMS</button></div>
 <hr>
+<h3>Last Sent Date: <%=lastSentDate%></h3>
 <table>
     <thead>
         <tr>
@@ -42,13 +43,7 @@
             
                 var daydiff = (next_appointment-today) / (1000 * 60 * 60 * 24);
                 var nodays = Math.round(daydiff);
-    
-                if(nodays==1){
-                    var message='A';
-                }else{
-                    var message='AA';
-                }
-                    
+        
                     if(cleanedPhoneNumber.length>=10){                      
                         console.log(cleanedPhoneNumber);
     
@@ -84,54 +79,15 @@
             
             jq("#sendSMS").click(function(e){
                 
-                // updateSentStatus();
-                var appid = Date.now();
-                
-                var url1 = 'https://api2.infobip.com/api/sendsms/plain?user=SteveJ&password=Health%4012345&type=LongSMS&sender=IHVN&SMSText=A&appid='+appid+'&GSM='+phoneNumbers1;
-                
-                
-    
-                var url2 = 'https://api2.infobip.com/api/sendsms/plain?user=SteveJ&password=Health%4012345&type=LongSMS&sender=IHVN&SMSText=A&appid='+appid+'&GSM='+phoneNumbers2;
-                
-                console.log(url1+","+url2);
-                jq.ajax({
-                    url: url1,
-    
-                    dataType: "jsonp",
-                    success: function( response ) {
-                        console.log( response ); // server response
-                    }
-    
+                jq.getJSON('${ui.actionLink("sendSms")}', {phoneNumbers1: phoneNumbers1, phoneNumbers2:phoneNumbers2},
+                    function(response){
+                        console.log(response);
                 });
-    
-                jq.ajax({
-                    url: url2,
-    
-                    dataType: "jsonp",
-                    success: function( response ) {
-                        console.log( response ); // server response
-                    }
-    
-                });
-    
+        
+ 
             });
        
        })
             
-            
-      function updateSentStatus()
-      { 
-        jq.ajax({
-            url:'${ ui.actionLink("updateSentStatus") }',
-            type:"GET",
-            data:{},
-            success:function(response){
-                console.log(response)
-                
-            },
-            error:function(xhr, status, error){
-    
-            }
-        })
-      }
+     
     </script>
