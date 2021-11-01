@@ -15,25 +15,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Nwokoma
+ * @author Tony
  */
-
-public class PatientDao {
+public class NumberChecksDao {
 	
-	public List<Map<String, String>> getAllPatients() {
+	public List<Map<String, String>> getAllNumbers() {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Connection con = null;
-        List<Map<String, String>> allPatients = new ArrayList<>();
+        List<Map<String, String>> allNumbers= new ArrayList<>();
 
         try {
             
                 con = Database.connectionPool.getConnection();
                 
                 
-                String query = "SELECT DISTINCT patient.patient_id, person_attribute.value AS phone_number, obs.value_datetime AS next_date FROM patient "
+                String query = "SELECT DISTINCT patient.patient_id, person_attribute.value AS phone_number FROM patient "
                         + " JOIN person_attribute ON person_attribute.person_id=patient.patient_id AND person_attribute.person_attribute_type_id=8 "
-                        + " JOIN obs ON obs.person_id=patient.patient_id AND obs.concept_id=5096 AND (DATEDIFF(obs.value_datetime, CURDATE()) = 1 OR DATEDIFF(obs.value_datetime, CURDATE()) = 2)"
                         + " where patient.voided=0 LIMIT 100";
                 // int i = 1;
                 stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -42,10 +40,9 @@ public class PatientDao {
                     Map<String,String> tempMap = new HashMap<>();
                     tempMap.put("patient_id", rs.getString("patient_id"));
                     tempMap.put("phone_number", rs.getString("phone_number"));
-                    tempMap.put("next_date", rs.getString("next_date"));
-                    allPatients.add(tempMap);
+                    allNumbers.add(tempMap);
                 }
-                return allPatients;
+                return allNumbers;
 
         }
         catch (SQLException ex) {

@@ -7,33 +7,25 @@ package org.openmrs.module.smsreminder.fragment.controller;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
-import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.smsreminder.ParameterStringBuilder;
 import org.openmrs.module.smsreminder.api.dao.Database;
+import org.openmrs.module.smsreminder.api.dao.DateFormatter;
 import org.openmrs.module.smsreminder.api.dao.PatientDao;
-import org.openmrs.ui.framework.annotation.SpringBean;
 import org.openmrs.ui.framework.fragment.FragmentModel;
 
 /**
@@ -55,6 +47,7 @@ public class PatientFragmentController {
 		
 		model.addAttribute("patients", allPatients);
 		model.addAttribute("lastSentDate", lastSentDate);
+		model.addAttribute("dformatter", DateFormatter.class);
 	}
 	
 	private void sendSMS(String message, String phoneNumbers) {
@@ -62,10 +55,12 @@ public class PatientFragmentController {
 			String appId = Long.toString(new Date().getTime());
 			
 			System.out.println(Long.toString(new Date().getTime()));
+			// URL url = new URL("https://app.smartsmssolutions.ng/io/api/client/v1/sms/);
 			
 			URL url = new URL(
 			        "https://api2.infobip.com/api/sendsms/plain?user=SteveJ&password=Health%4012345&type=LongSMS&sender=IHVN&SMS&appid="
 			                + appId + "&GSM=" + phoneNumbers + "&Text=" + message);
+			
 			StringBuilder strBuf = new StringBuilder();
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
@@ -84,6 +79,65 @@ public class PatientFragmentController {
 			System.out.println(strBuf.toString());
 			out.flush();
 			out.close();
+			
+			/*
+			URL url = new URL("https://app.smartsmssolutions.ng/io/api/client/v1/sms/");
+			Map<String, String> params = new LinkedHashMap<String, String>();
+			params.put("token", "v20ylRY3Gp6jYEAvpaDtOQQTqwoCqc1n4CUG3IBboIMTciDeVk");
+			params.put("sender", "Tony");
+			params.put("to", phoneNumbers);
+			params.put("message", message);
+			params.put("type", "0");
+			params.put("ref_id", appId);
+			params.put("routing", "2");
+			
+			StringBuilder postData = new StringBuilder();
+			for (Map.Entry<String, String> param : params.entrySet()) {
+				if (postData.length() != 0)
+					postData.append('&');
+				postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+				postData.append('=');
+				postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+			}
+			byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+			
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+			conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+			conn.setDoOutput(true);
+			conn.getOutputStream().write(postDataBytes);
+			
+			Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+			
+			//for (int c; (c = in.read()) >= 0;)
+			//System.out.print((char) c);
+			
+			StringBuilder sb = new StringBuilder();
+			for (int c; (c = in.read()) >= 0;)
+				sb.append((char) c);
+			String response = sb.toString();
+			
+			JSONArray ja = new JSONArray(response);
+			
+			int n = ja.length();
+			for (int i = 0; i < n; i++) {
+				// GET INDIVIDUAL JSON OBJECT FROM JSON ARRAY
+				JSONObject jo = ja.getJSONObject(i);
+				
+				// RETRIEVE EACH JSON OBJECT'S FIELDS
+				
+				String code = jo.getString("code");
+				String messageid = jo.getString("messageid");
+				String ref_id = jo.getString("ref_id");
+				
+				System.out.println(code);
+				System.out.println(messageid);
+				System.out.println(ref_id);
+				
+			}
+			            */
+			
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -97,10 +151,10 @@ public class PatientFragmentController {
 			
 			String phoneNumbers1 = request.getParameter("phoneNumbers1");
 			String phoneNumbers2 = request.getParameter("phoneNumbers2");
-			/*
-			String phoneNumbers1 = "2348025254999,2348114452906,23436477122";
-			String phoneNumbers2 = "2347067973091,23481884965986";
-			*/
+			
+			//String phoneNumbers1 = "2348025254999,2348114452906";
+			// String phoneNumbers2 = "2347067973091";
+			
 			this.sendSMS("A", phoneNumbers1);
 			this.sendSMS("AA", phoneNumbers2);
 			

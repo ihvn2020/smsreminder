@@ -1,0 +1,5 @@
+org\openmrs\module\smsreminder\fragment\controller\UsersFragmentController.class
+org\openmrs\module\smsreminder\web\controller\SmsreminderController.class
+org\openmrs\module\smsreminder\fragment\controller\PatientFragmentController.class
+org\openmrs\module\smsreminder\fragment\controller\NumberchecksFragmentController.class
+org\openmrs\module\smsreminder\extension\html\AdminList.class
