@@ -1,12 +1,12 @@
 <hr>
 <div class="row">
-<a href="/smsreminder/numberchecks.page" style="float: right">Phone Number Check >></a>
     
             <input type="hidden" name="recipients" id="recipients" class="form-control">
             <input type="hidden" name="nextdates" id="nextdates" class="form-control">
 
             
-            <button class="btn btn-success center" id="sendSMS" style="text-align: center;">Send SMS</button>
+            <div  style="text-align: center;"><button class="btn btn-success center" id="sendSMS">Send SMS</button></div>
+            <a href="/smsreminder/numberchecks.page" style="float: right">Phone Number Validation >></a>
             
         
             
@@ -19,7 +19,9 @@
             </thead>
             
             <tbody>
-                <% for(int i=0; i<patients.size(); i++)
+                <% 
+                if(patients!= null){
+                for(int i=0; i<patients.size(); i++)
                 {                   
                     %>
                 <tr>
@@ -35,7 +37,7 @@
                             <% } %>
                         </td>
                 </tr>
-            <% } %>
+            <% }} %>
             
             </tbody>
         </table>
@@ -50,7 +52,7 @@
 
 
     var jq = jQuery;
-
+<% if(patients != null){%>
     jq(document).ready(function(e){
             
         jq("#sendSMS").click(function(e){
@@ -200,6 +202,8 @@
         }   
         
     }
+            
+<% } %>
     
        
      

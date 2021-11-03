@@ -31,10 +31,10 @@ public class PatientDao {
                 con = Database.connectionPool.getConnection();
                 
                 
-                String query = "SELECT DISTINCT patient.patient_id, person_attribute.value AS phone_number, obs.value_datetime AS next_date FROM patient "
-                        + " JOIN person_attribute ON person_attribute.person_id=patient.patient_id AND person_attribute.person_attribute_type_id=8 "
+                String query = "SELECT DISTINCT patient.patient_id, person_attribute.value AS phone_number, obs.value_datetime AS next_date FROM patient"
+                        + " LEFT JOIN person_attribute ON person_attribute.person_id=patient.patient_id AND person_attribute.person_attribute_type_id=8"
                         + " JOIN obs ON obs.person_id=patient.patient_id AND obs.concept_id=5096 AND (DATEDIFF(obs.value_datetime, CURDATE()) = 1 OR DATEDIFF(obs.value_datetime, CURDATE()) = 2)"
-                        + " where patient.voided=0 LIMIT 100";
+                        + " where patient.voided=0 AND person_attribute.voided=0 LIMIT 100";
                 // int i = 1;
                 stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 rs = stmt.executeQuery();
@@ -45,6 +45,7 @@ public class PatientDao {
                     tempMap.put("next_date", rs.getString("next_date"));
                     allPatients.add(tempMap);
                 }
+                
                 return allPatients;
 
         }

@@ -9,49 +9,50 @@ import java.io.Serializable;
 import org.openmrs.BaseOpenmrsObject;
 
 /**
- *
  * @author Tony
  */
 public class Smsreminder extends BaseOpenmrsObject implements Serializable {
-
-    private Integer smsreminderId;
-    private String patientId;
-    private String comments;
-
-    public Integer getSmsreminderId() {
-        return smsreminderId;
-    }
-
-    public void setSmsreminderId(Integer smsreminderId) {
-        this.smsreminderId = smsreminderId;
-    }
-
-    public String getPatientId() {
-        return patientId;
-    }
-
-    public void setPatientId(String patientId) {
-        this.patientId = patientId;
-    }
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
-
-    @Override
-    public Integer getId() {
-        return getSmsreminderId();
-    }
-
-    @Override
-    public void setId(Integer id) {
-        setSmsreminderId(id);
-    }
-    
-    
-    
+	
+	private static final long serialVersionUID = 1L;
+	
+	private Integer smsreminderId;
+	
+	private String patientId;
+	
+	private String comments;
+	
+	public Integer getSmsreminderId() {
+		return smsreminderId;
+	}
+	
+	public void setSmsreminderId(Integer smsreminderId) {
+		this.smsreminderId = smsreminderId;
+	}
+	
+	public String getPatientId() {
+		return patientId;
+	}
+	
+	public void setPatientId(String patientId) {
+		this.patientId = patientId;
+	}
+	
+	public String getComments() {
+		return comments;
+	}
+	
+	public void setComments(String comments) {
+		this.comments = comments;
+	}
+	
+	@Override
+	public Integer getId() {
+		return getSmsreminderId();
+	}
+	
+	@Override
+	public void setId(Integer id) {
+		setSmsreminderId(id);
+	}
+	
 }

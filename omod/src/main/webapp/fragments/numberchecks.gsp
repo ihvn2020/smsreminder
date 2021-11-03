@@ -1,12 +1,16 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+  
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
 <div class="row">
     
         <h5 style="text-align: center; color: green; font-size: smaller;">Last Phone Number Validation: <%= dformatter.formatDate(lastNumberChecks) %></h5>
-        <div style="text-align: center"><button class="btn btn-success" id="saveChanges">Save Changes</button></div>
+        <a href="/smsreminder/smsreminder.page" style="float: left"><< Appointment Reminder</a>
+        <hr>
 
-        <table>
+        <table id="phonenumbers">
             <thead>
                 <tr> 
-                    <th>Patient ID</th><th>Phone number</th><th>Comment/Remarks</th><th>Status/Action</th>
+                    <th>SN</th><th>Patient ID</th><th>Phone number</th><th>Comment/Remarks</th><th>Status/Action</th>
                 </tr>
             </thead>
             
@@ -14,9 +18,10 @@
                 <% for(int i=0; i<numbers.size(); i++)
                 { %>
                 <tr>
+                    <td><%= i+1 %>
                     <td><%= numbers.get(i).get("patient_id"); %></td>
                     <td><a href="tel:<%= numbers.get(i).get("phone_number"); %>"><%= numbers.get(i).get("phone_number"); %> &phone;</a></td>
-                    <td><input id="comment" placeholder="Enter Comments"/></td>
+                    <td><input id="comment<%=i%>" onClick="unHide(<%=i%>)" placeholder="Enter Comments"/> <a href="#" class="savebtn" id="phone<%=i%>" onClick="saveComment('comment'+<%=i%>,<%= numbers.get(i).get("patient_id"); %>)" value="<%= numbers.get(i).get("comment"); %>" >Save</a></td>
         
                     <td>
                         <% if(numbers.get(i).get("phone_number")=="" || numbers.get(i).get("phone_number").length()<10 || dformatter.isNumeric(numbers.get(i).get("phone_number"))==false){ %>
@@ -35,6 +40,30 @@
     
     
 </div>
+    <script type="text/javascript">
 
 
+    var jq = jQuery;
+    jq(document).ready( function () {
+        jq('#phonenumbers').DataTable();
+
+           jq(".savebtn").hide();   
+
+
+            // var receivers = jq('#recipients').val();
+
+    } );
     
+    function unHide(savenum){
+        jq("#phone"+savenum).show();
+    }
+    
+    function saveComment(comment,patientId){
+        
+        jq.getJSON('${ui.actionLink("saveComment")}', {comment:comment, patient_id:patientId},
+                function(response){
+                    console.log(response);
+        });
+    }
+     
+    </script>

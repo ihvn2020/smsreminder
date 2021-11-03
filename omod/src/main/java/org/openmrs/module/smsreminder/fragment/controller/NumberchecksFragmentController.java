@@ -46,15 +46,26 @@ public class NumberchecksFragmentController {
 		model.addAttribute("dformatter", DateFormatter.class);
 	}
 	
-	private void callNumber(String message, String phoneNumbers) {
+	public String saveComment(HttpServletRequest request) {
 		
-	}
-	
-	public String callNumber(HttpServletRequest request) {
-		
-		this.updateCheckStatus();
-		return "A";
-		
+		try {
+			
+			String comment = request.getParameter("comment");
+			int patient_id = Integer.parseInt(request.getParameter("patient_id"));
+			
+			//String phoneNumbers1 = "2348025254999,2348114452906";
+			// String phoneNumbers2 = "2347067973091";
+			
+			numbersDao.addComments(comment, patient_id);
+			
+			this.updateCheckStatus();
+			return "true";
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			//Logger.getLogger(PatientFragmentController.class.getName()).log(Level.SEVERE, null, ex);
+			return "false";
+		}
 	}
 	
 	/*

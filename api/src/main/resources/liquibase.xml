@@ -35,5 +35,19 @@
         <addForeignKeyConstraint constraintName="smsreminder_item_owner_fk" baseTableName="smsreminder_item" baseColumnNames="owner"  referencedTableName="users"
                                  referencedColumnNames="user_id" />
     </changeSet> -->
+    <changeSet author="Tony Nwokoma" id="2021101-2">
+        <preConditions onFail="MARK_RAN">
+			<not><tableExists tableName="phonechecks_comments"/></not>
+		</preConditions>
+        <comment>Create the Phone Number Checks Comments table</comment>
+        <createTable tableName="phonechecks_comments">
+            <column autoIncrement="true" name="smsreminder_id" type="int">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="patient_id" type="int(10)" />
+            <column name="comment" type="varchar(255)" />
+            
+        </createTable>
+    </changeSet>
  
 </databaseChangeLog>
