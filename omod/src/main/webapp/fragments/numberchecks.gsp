@@ -21,7 +21,7 @@
                     <td><%= i+1 %>
                     <td><%= numbers.get(i).get("patient_id"); %></td>
                     <td><a href="tel:<%= numbers.get(i).get("phone_number"); %>"><%= numbers.get(i).get("phone_number"); %> &phone;</a></td>
-                    <td><input id="comment<%=i%>" onClick="unHide(<%=i%>)" placeholder="Enter Comments"/> <a href="#" class="savebtn" id="phone<%=i%>" onClick="saveComment('comment'+<%=i%>,<%= numbers.get(i).get("patient_id"); %>)" value="<%= numbers.get(i).get("comment"); %>" >Save</a></td>
+                    <td><input id="comment<%=i%>" onClick="unHide(<%=i%>)" placeholder="Enter Comments" value="<%= numbers.get(i).get("comment") == null ? "" : numbers.get(i).get("comment") %>" style="border: none !important"/> <a href="#" class="savebtn" id="phone<%=i%>" onClick="saveComment('comment'+<%=i%>,<%= numbers.get(i).get("patient_id"); %>)" >Save</a></td>
         
                     <td>
                         <% if(numbers.get(i).get("phone_number")=="" || numbers.get(i).get("phone_number").length()<10 || dformatter.isNumeric(numbers.get(i).get("phone_number"))==false){ %>
@@ -59,8 +59,9 @@
     }
     
     function saveComment(comment,patientId){
-        
-        jq.getJSON('${ui.actionLink("saveComment")}', {comment:comment, patient_id:patientId},
+        var cmmt = jq("#"+comment).val();
+
+        jq.getJSON('${ui.actionLink("saveComment")}', {comment:cmmt, patient_id:patientId},
                 function(response){
                     console.log(response);
         });

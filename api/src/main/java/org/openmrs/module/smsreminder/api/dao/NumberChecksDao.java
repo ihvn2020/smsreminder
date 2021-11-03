@@ -34,7 +34,7 @@ public class NumberChecksDao {
                 con = Database.connectionPool.getConnection();
                 
                 
-                String query = "SELECT DISTINCT patient.patient_id, person_attribute.value AS phone_number FROM patient, phonechecks_comments.comment AS comment "
+                String query = "SELECT DISTINCT patient.patient_id, person_attribute.value AS phone_number, phonechecks_comments.comment AS comment  FROM patient"
                         + " LEFT JOIN person_attribute ON person_attribute.person_id=patient.patient_id AND person_attribute.person_attribute_type_id=8 "
                         + " LEFT JOIN phonechecks_comments ON phonechecks_comments.patient_id=patient.patient_id "
                         + " where patient.voided=0 AND person_attribute.voided=0";
@@ -65,23 +65,56 @@ public class NumberChecksDao {
 		try {
 			
 			con = Database.connectionPool.getConnection();
+			String query;
 			
-			String query = "INSERT INTO phonechecks_comments  (patient_id, comment) VALUES (?,?)";
+			if (this.commentExist(patient_id)) {
+				query = "INSERT INTO phonechecks_comments  (comment,patient_id) VALUES (?,?)";
+				System.out.println("INSERT STATEMENT CHOOSEN");
+			} else {
+				query = "UPDATE phonechecks_comments SET comment=? WHERE patient_id=?";
+				System.out.println("UPDATE STATEMENT CHOSEN");
+			}
+			
 			int i = 1;
-			
 			stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-			stmt.setInt(i++, patient_id);
 			stmt.setString(i++, comment);
-			// stmt.setString(i++, query);    
-			
-			System.out.println("Now Print Query!");
-			stmt.execute();
+			stmt.setInt(i++, patient_id);
+			System.out.println("FINALLY INSERT!");
+			stmt.executeUpdate();
 		}
 		catch (SQLException ex) {
 			Database.handleException(ex);
 		}
 		finally {
 			Database.cleanUp(rs, stmt, con);
+		}
+	}
+	
+	public boolean commentExist(int patient_id) {
+		
+		try {
+			
+			con = Database.connectionPool.getConnection();
+			
+			String query = "SELECT patient_id FROM phonechecks_comments WHERE  patient_id = ?";
+			int i = 1;
+			
+			stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			stmt.setInt(i++, patient_id);
+			rs = stmt.executeQuery();
+			
+			if (!rs.isBeforeFirst()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		catch (SQLException ex) {
+			Database.handleException(ex);
+			return false;
+		}
+		finally {
+			// Database.cleanUp(rs, stmt, con);
 		}
 	}
 }
