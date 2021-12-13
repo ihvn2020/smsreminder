@@ -7,11 +7,15 @@ package org.openmrs.module.smsreminder.fragment.controller;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,8 +23,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+import liquibase.util.csv.CSVReader;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.joda.time.DateTime;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.smsreminder.ParameterStringBuilder;
 import org.openmrs.module.smsreminder.api.dao.Database;
@@ -35,7 +41,7 @@ public class PatientFragmentController {
 	
 	PatientDao patientDao = new PatientDao();
 	
-	public void controller(FragmentModel model) {
+	public void controller(FragmentModel model) throws Exception {
 		
 		String lastSentDate = "";
 		Database.initConnection();
@@ -57,7 +63,9 @@ public class PatientFragmentController {
 			System.out.println(Long.toString(new Date().getTime()));
 			// URL url = new URL("https://app.smartsmssolutions.ng/io/api/client/v1/sms/);
 			
-			
+			URL url = new URL(
+			        "https://api2.infobip.com/api/sendsms/plain?user=SteveJ&password=%40%40Health2345&type=LongSMS&sender=IHVN&SMS&appid="
+			                + appId + "&GSM=" + phoneNumbers + "&Text=" + message);
 			
 			StringBuilder strBuf = new StringBuilder();
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -174,5 +182,14 @@ public class PatientFragmentController {
 		String today = now.get(Calendar.YEAR) + "-" + (now.get(Calendar.MONTH) + 1) + "-" + now.get(Calendar.DATE);
 		Context.getAdministrationService().setGlobalProperty("last_sms_reminder", today);
 		return "complete";
+	}
+	
+	public List<String[]> readAll(Reader reader) throws Exception {
+		CSVReader csvReader = new CSVReader(reader);
+		List<String[]> list = new ArrayList<String[]>();
+		list = csvReader.readAll();
+		reader.close();
+		csvReader.close();
+		return list;
 	}
 }

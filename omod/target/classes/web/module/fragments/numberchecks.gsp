@@ -10,7 +10,7 @@
         <table id="phonenumbers">
             <thead>
                 <tr> 
-                    <th>SN</th><th>Patient ID</th><th>Phone number</th><th>Comment/Remarks</th><th>Status/Action</th>
+                    <th>SN</th><th>Pepfar ID</th><th>Hospital No</th><th>Phone number</th><th>Comment/Remarks</th><th>Status/Action</th>
                 </tr>
             </thead>
             
@@ -18,14 +18,16 @@
                 <% for(int i=0; i<numbers.size(); i++)
                 { %>
                 <tr>
-                    <td><%= i+1 %>
-                    <td><%= numbers.get(i).get("patient_id"); %></td>
+                    <td><%= i+1 %></td>
+                    <td><%= numbers.get(i).get("pepfar_id"); %></td>
+                    <td><%= numbers.get(i).get("hospitalNumber"); %></td>
+                    
                     <td><a href="tel:<%= numbers.get(i).get("phone_number"); %>"><%= numbers.get(i).get("phone_number"); %> &phone;</a></td>
                     <td><input id="comment<%=i%>" onClick="unHide(<%=i%>)" placeholder="Enter Comments" value="<%= numbers.get(i).get("comment") == null ? "" : numbers.get(i).get("comment") %>" style="border: none !important"/> <a href="#" class="savebtn" id="phone<%=i%>" onClick="saveComment('comment'+<%=i%>,<%= numbers.get(i).get("patient_id"); %>)" >Save</a></td>
         
                     <td>
-                        <% if(numbers.get(i).get("phone_number")=="" || numbers.get(i).get("phone_number").length()<10 || dformatter.isNumeric(numbers.get(i).get("phone_number"))==false){ %>
-                            <a href="/openmrs/registrationapp/editSection.page?patientId=${numbers.get(i).get("patient_id")}&sectionId=contactInfo&appId=referenceapplication.registrationapp.registerPatient" class="btn btn-warning">Edit Invalid Number</a>
+                        <% if(numbers.get(i).get("phone_number")=="" || numbers.get(i).get("phone_number").length()<11 || dformatter.isNumeric(numbers.get(i).get("phone_number"))==false){ %>
+                            <a href="/openmrs/registrationapp/editSection.page?patientId=${numbers.get(i).get("patient_id")}&sectionId=contactInfo&appId=referenceapplication.registrationapp.registerPatient" class="btn btn-warning small"  style="color: red">Edit Invalid Number</a>
                         <% }else{ %>
                             <a href="/openmrs/registrationapp/editSection.page?patientId=${numbers.get(i).get("patient_id")}&sectionId=contactInfo&appId=referenceapplication.registrationapp.registerPatient" class="btn btn-success" style="color: green"> &#10004; Valid</a>
                         <% } %>

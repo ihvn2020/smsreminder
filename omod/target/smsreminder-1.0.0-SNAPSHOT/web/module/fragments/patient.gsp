@@ -1,12 +1,31 @@
 <hr>
 <div class="row">
     
-            <input type="hidden" name="recipients" id="recipients" class="form-control">
-            <input type="hidden" name="nextdates" id="nextdates" class="form-control">
+            <% 
+                String allphonenos = "";
+                String allappdates = "";
+                if(patients!= null){
+                    for(int i=0; i<patients.size(); i++)
+                    { 
+                        if(i == patients.size() - 1){
+                            allphonenos = allphonenos+patients.get(i).get("phone_number"); 
+                            allappdates = allappdates+patients.get(i).get("next_date"); 
+                        }else{
+                            allphonenos = allphonenos+patients.get(i).get("phone_number")+","; 
+                            allappdates = allappdates+patients.get(i).get("next_date")+","; 
+                        }
+                    }  
+                }
+            %>
+                    
+            <input type="hidden" name="recipients" id="recipients" class="form-control" value="<%=allphonenos%>" >
+            <input type="hidden" name="nextdates" id="nextdates" class="form-control" value="<%=allappdates%>">
 
             
-            <div  style="text-align: center;"><button class="btn btn-success center" id="sendSMS">Send SMS</button></div>
+            <div  style="text-align: center;"><button class="btn btn-success center" id="sendSMS">Send SMS</button><br><small style="font-size: 11px; color: orange;">&#9432; Click to Send to All Selected</small></div>
+            
             <a href="/smsreminder/numberchecks.page" style="float: right">Phone Number Validation >></a>
+            <a href="/smsreminder/invalidnumbers.page" style="float: right; color: red;">Invalid Numbers </a> | 
             
         
             
@@ -14,7 +33,7 @@
         <table>
             <thead>
                 <tr> 
-                    <th>Select</th><th>Patient ID</th><th>Phone number</th><th>Next Appointment Date</th><th>Status/Action</th>
+                    <th>Select</th><th>Pepfar ID</th><th>Hospital No</th><th>Phone number</th><th>Next Appointment Date</th><th>Status/Action</th>
                 </tr>
             </thead>
             
@@ -25,13 +44,15 @@
                 {                   
                     %>
                 <tr>
-                    <td><input type="checkbox" value="select" onClick="addNumber(<%= patients.get(i).get('phone_number')+",'"+patients.get(i).get('next_date'); %>')" ></td>
-                    <td><%= patients.get(i).get("patient_id"); %></td>
+                    <td><input type="checkbox" value="select" onClick="addNumber('<%= patients.get(i).get('phone_number')+"','"+patients.get(i).get('next_date'); %>')" checked ></td>
+                    <td><%= patients.get(i).get("pepfar_id"); %></td>
+                    <td><%= numbers.get(i).get("hospitalNumber"); %></td>
                         <td><%= patients.get(i).get("phone_number"); %></td>
                         <td><%= dformatter.formatDate(patients.get(i).get("next_date")); %></td>
                         <td>
-                            <% if(patients.get(i).get("phone_number")=="" || patients.get(i).get("phone_number").length()<10  || dformatter.isNumeric(patients.get(i).get("phone_number"))==false){ %>
-                                <a href="/openmrs/registrationapp/editSection.page?patientId=${patients.get(i).get("patient_id")}&sectionId=contactInfo&appId=referenceapplication.registrationapp.registerPatient" class="btn btn-warning">Edit Invalid Number</a>
+                            
+                            <% if(patients.get(i).get("phone_number")=="" || patients.get(i).get("phone_number").length()<11  || dformatter.isNumeric(patients.get(i).get("phone_number"))==false){ %>
+                                <a href="/openmrs/registrationapp/editSection.page?patientId=${patients.get(i).get("patient_id")}&sectionId=contactInfo&appId=referenceapplication.registrationapp.registerPatient" class="btn btn-warning small"  style="color: orange">Edit Invalid Number</a>
                             <% }else{ %>
                                 <a href="/openmrs/registrationapp/editSection.page?patientId=${patients.get(i).get("patient_id")}&sectionId=contactInfo&appId=referenceapplication.registrationapp.registerPatient" class="btn btn-success" style="color: green"> &#10004; Valid</a>
                             <% } %>
@@ -81,6 +102,8 @@
                     
                         var daydiff = (next_appointment-today) / (1000 * 60 * 60 * 24);
                         var nodays = Math.round(daydiff);
+            
+                        // alert(nodays+"%");
 
 
                 
@@ -113,6 +136,8 @@
             
                 <% } %>                
             }else{
+            
+                // alert(JSON.stringify(nxtappdates));
 
                 patients = receivers.split(",");
                 nextdates = nxtappdates.split(",");
@@ -127,7 +152,8 @@
                         var daydiff = (next_appointment-today) / (1000 * 60 * 60 * 24);
                         var nodays = Math.round(daydiff);
 
-
+                       
+                        // console.log(cleanedPhoneNumber+" No of Days "+nodays);
                 
                             if(cleanedPhoneNumber.length>=10){                      
                                 // console.log(cleanedPhoneNumber);
@@ -158,12 +184,15 @@
                
 
             }
-
+            
             jq.getJSON('${ui.actionLink("sendSms")}', {phoneNumbers1: phoneNumbers1, phoneNumbers2:phoneNumbers2},
                     function(response){
                         console.log(response);
+                    
+                alert("SMS Sent Successfully, Click OK continue!");
             });
-        
+                    
+            
 
         });
        
@@ -173,6 +202,8 @@
     function addNumber(number,nextdate){
         var receivers = jq('#recipients').val();
         var nextdates = jq('#nextdates').val();
+            
+        
     
         if(jq("#recipients").val().indexOf(','+number) >= 0){
             

@@ -34,7 +34,9 @@ public class NumberChecksDao {
                 con = Database.connectionPool.getConnection();
                 
                 
-                String query = "SELECT DISTINCT patient.patient_id, person_attribute.value AS phone_number, phonechecks_comments.comment AS comment  FROM patient"
+                String query = "SELECT DISTINCT patient.patient_id, person_attribute.value AS phone_number, patient_identifier.identifier AS pepfar_id, hospno.identifier AS hospitalNumber, phonechecks_comments.comment AS comment  FROM patient"
+                        + " LEFT JOIN patient_identifier ON patient_identifier.patient_id=patient.patient_id AND patient_identifier.identifier_type=4 "
+                        + " LEFT JOIN patient_identifier hospno ON patient_identifier.patient_id=patient.patient_id AND patient_identifier.identifier_type=5 "
                         + " LEFT JOIN person_attribute ON person_attribute.person_id=patient.patient_id AND person_attribute.person_attribute_type_id=8 "
                         + " LEFT JOIN phonechecks_comments ON phonechecks_comments.patient_id=patient.patient_id "
                         + " where patient.voided=0 AND person_attribute.voided=0";
@@ -46,6 +48,8 @@ public class NumberChecksDao {
                     tempMap.put("patient_id", rs.getString("patient_id"));
                     tempMap.put("phone_number", rs.getString("phone_number"));
                     tempMap.put("comment", rs.getString("comment"));
+                    tempMap.put("pepfar_id", rs.getString("pepfar_id"));
+                    tempMap.put("hospitalNumber", rs.getString("hospitalNumber"));
                     allNumbers.add(tempMap);
                 }
                 return allNumbers;
