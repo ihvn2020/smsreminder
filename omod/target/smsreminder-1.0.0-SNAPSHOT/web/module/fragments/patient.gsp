@@ -25,7 +25,7 @@
             <div  style="text-align: center;"><button class="btn btn-success center" id="sendSMS">Send SMS</button><br><small style="font-size: 11px; color: orange;">&#9432; Click to Send to All Selected</small></div>
             
             <a href="/smsreminder/numberchecks.page" style="float: right">Phone Number Validation >></a>
-            <a href="/smsreminder/invalidnumbers.page" style="float: right; color: red;">Invalid Numbers </a> | 
+            <a href="/smsreminder/invalidnumbers.page" style="float: right; color: red;">Invalid Numbers  | </a>
             
         
             

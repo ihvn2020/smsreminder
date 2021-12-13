@@ -63,9 +63,7 @@ public class PatientFragmentController {
 			System.out.println(Long.toString(new Date().getTime()));
 			// URL url = new URL("https://app.smartsmssolutions.ng/io/api/client/v1/sms/);
 			
-			URL url = new URL(
-			        "https://api2.infobip.com/api/sendsms/plain?user=SteveJ&password=%40%40Health2345&type=LongSMS&sender=IHVN&SMS&appid="
-			                + appId + "&GSM=" + phoneNumbers + "&Text=" + message);
+			URL url = new URL(#);
 			
 			StringBuilder strBuf = new StringBuilder();
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
